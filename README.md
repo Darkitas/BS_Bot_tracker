@@ -66,13 +66,31 @@ npm install
 copy .env.example .env
 ```
 
-3. Validar tipos:
+3. Elegir modo de ejecucion en `.env`:
+
+- `RUNTIME_MODE=local` para pruebas sin WhatsApp.
+- `RUNTIME_MODE=whatsapp` para escuchar eventos reales.
+
+Si usas vinculacion por codigo, configura tambien:
+
+- `USE_PAIRING_CODE=true`
+- `PAIRING_PHONE_NUMBER=CODIGOPAISNUMERO` (solo digitos, sin `+`)
+
+Opcional para bienvenida y comandos:
+
+- `WELCOME_ENABLED=true`
+- `WELCOME_GROUP_IDS=12345@g.us,67890@g.us` (vacio = todos los grupos)
+- `WELCOME_TEMPLATE=Texto de bienvenida...` (usa `\\n` para saltos de linea)
+- `COMMAND_PREFIX=!`
+- `REPORT_COMMAND_KEYWORD=reporte`
+
+4. Validar tipos:
 
 ```bash
 npm run typecheck
 ```
 
-4. Ejecutar en desarrollo:
+5. Ejecutar en desarrollo:
 
 ```bash
 npm run dev
@@ -104,6 +122,25 @@ Este flujo no requiere WhatsApp ni vinculacion de numero, y sirve para verificar
 - `npm run clean`: elimina `dist/`
 - `npm run simulate`: genera datos simulados y reporte local
 - `npm run check:local`: typecheck + simulacion local
+
+## Comandos en WhatsApp
+
+Cuando `RUNTIME_MODE=whatsapp` este activo, el bot escucha en grupos:
+
+- `reporte`
+- `reporte 60`
+- `!reporte`
+- `!reporte 30`
+
+El bot responde con resumen y adjunta el reporte en CSV y TXT.
+
+## Bienvenida automatica
+
+Cuando entra una persona al grupo (`group-participants.update` con accion `add`):
+
+- El bot envia mensaje de bienvenida con menciones.
+- Incluye la plantilla configurada en `WELCOME_TEMPLATE`.
+- Si `WELCOME_GROUP_IDS` tiene valores, solo se aplica en esos grupos.
 
 ## Notas operativas
 
